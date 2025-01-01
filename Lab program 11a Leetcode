@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+struct ListNode {
+    int val;
+    struct ListNode* next;
+};
+struct ListNode* createNode(int val) {
+    struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode));
+    newNode->val = val;
+    newNode->next = NULL;
+    return newNode;
+}
+void append(struct ListNode** head, int val) {
+    struct ListNode* newNode = createNode(val);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct ListNode* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+void printList(struct ListNode* head) {
+    struct ListNode* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->val);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+struct ListNode* reverseList(struct ListNode* head) {
+    struct ListNode* prev = NULL;
+    struct ListNode* current = head;
+    struct ListNode* next = NULL;
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    return prev;
+}
+bool isPalindrome(struct ListNode* head) {
+    if (head == NULL || head->next == NULL) {
+        return true; 
+    }
+    struct ListNode *slow = head, *fast = head;
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    struct ListNode* secondHalf = reverseList(slow);
+    struct ListNode* firstHalf = head;
+    while (secondHalf != NULL) {
+        if (firstHalf->val != secondHalf->val) {
+            return false; 
+        }
+        firstHalf = firstHalf->next;
+        secondHalf = secondHalf->next;
+    }
+    return true; 
+}
+void freeList(struct ListNode* head) {
+    struct ListNode* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+int main() {
+    struct ListNode* head = NULL;
+    int n, value;
+    printf("Enter the number of nodes in the linked list: ");
+    scanf("%d", &n);
+    printf("Enter the values for the linked list:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &value);
+        append(&head, value);
+    }
+    if (isPalindrome(head)) {
+        printf("The linked list is a palindrome.\n");
+    } else {
+        printf("The linked list is not a palindrome.\n");
+    }
+    freeList(head);
+    return 0;
+}
+
