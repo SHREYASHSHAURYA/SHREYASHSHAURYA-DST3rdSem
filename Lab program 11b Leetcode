@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+
+char* removeDigit(char* number, char digit) {
+    int n = strlen(number);
+    int indexToRemove = -1;
+
+    for (int i = 0; i < n; i++) {
+        if (number[i] == digit) {
+           
+            indexToRemove = i;
+
+            if (i < n - 1 && number[i] < number[i + 1]) {
+                break;  
+            }
+        }
+    }
+
+    static char result[100]; 
+    int k = 0;
+    for (int i = 0; i < n; i++) {
+        if (i != indexToRemove) {
+            result[k++] = number[i];
+        }
+    }
+    result[k] = '\0';  
+
+    return result;
+}
+
+int main() {
+    char number[100];
+    char digit;
+
+    printf("Enter a number (string): ");
+    scanf("%s", number);
+    
+    printf("Enter the digit to remove: ");
+    scanf(" %c", &digit);  
+
+    char* result = removeDigit(number, digit);
+    printf("Resulting string: %s\n", result);
+
+    return 0;
+}
