@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+void moveZeroes(int* nums, int numsSize) {
+    int nonZeroIndex = 0;  /should go
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] != 0) {
+            nums[nonZeroIndex] = nums[i];
+            if (i != nonZeroIndex) {
+                nums[i] = 0; 
+            }
+            nonZeroIndex++;
+        }
+    }
+}
+
+int main() {
+    int nums[100], numsSize;
+
+    printf("Enter the size of the array: ");
+    scanf("%d", &numsSize);
+
+    printf("Enter the elements of the array:\n");
+    for (int i = 0; i < numsSize; i++) {
+        scanf("%d", &nums[i]);
+    }
+
+    moveZeroes(nums, numsSize);
+
+    printf("Array after moving zeros to the end:\n");
+    for (int i = 0; i < numsSize; i++) {
+        printf("%d ", nums[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
