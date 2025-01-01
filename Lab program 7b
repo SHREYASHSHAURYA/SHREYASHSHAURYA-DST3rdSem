@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+
+void processString(char *s, char *result) {
+    int index = 0; 
+
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] == '#') {
+  
+            if (index > 0) {
+                index--;
+            }
+        } else {
+                        result[index++] = s[i];
+        }
+    }
+    result[index] = '\0'; 
+}
+
+int main() {
+    char s[100], t[100];
+    char processedS[100], processedT[100];
+
+    printf("Enter the first string (with backspaces as #): ");
+    fgets(s, sizeof(s), stdin);
+    s[strcspn(s, "\n")] = '\0';      
+    printf("Enter the second string (with backspaces as #): ");
+    fgets(t, sizeof(t), stdin);
+    t[strcspn(t, "\n")] = '\0';  
+
+    processString(s, processedS);
+    processString(t, processedT);
+
+    if (strcmp(processedS, processedT) == 0) {
+        printf("The two strings are equal after processing backspaces.\n");
+    } else {
+        printf("The two strings are NOT equal after processing backspaces.\n");
+    }
+
+    return 0;
+}
+
