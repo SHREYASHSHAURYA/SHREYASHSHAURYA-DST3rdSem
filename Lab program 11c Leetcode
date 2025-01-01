@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+struct ListNode {
+    int val;
+    struct ListNode* next;
+};
+
+struct ListNode* createNode(int val) {
+    struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode));
+    newNode->val = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+bool hasCycle(struct ListNode* head) {
+    if (!head || !head->next) {
+        return false;
+    }
+
+    struct ListNode* slow = head;
+    struct ListNode* fast = head;
+
+    while (fast && fast->next) {
+        slow = slow->next;         
+        fast = fast->next->next;    
+
+        if (slow == fast) {
+            return true;            
+        }
+    }
+
+    return false;                   
+}
+
+void createCycle(struct ListNode* head, int pos) {
+    if (pos == -1) {
+        return; 
+    }
+
+    struct ListNode* temp = head;
+    struct ListNode* cycleNode = NULL;
+    int index = 0;
+
+    while (temp->next != NULL) {
+        if (index == pos) {
+            cycleNode = temp;
+        }
+        temp = temp->next;
+        index++;
+    }
+    temp->next = cycleNode; 
+}
+
+int main() {
+    int n, val, pos;
+    struct ListNode* head = NULL;
+    struct ListNode* tail = NULL;
+
+    printf("Enter the number of nodes in the linked list: ");
+    scanf("%d", &n);
+
+    if (n <= 0) {
+        printf("No nodes in the linked list.\n");
+        return 0;
+    }
+
+    printf("Enter the values of the nodes:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        struct ListNode* newNode = createNode(val);
+
+        if (!head) {
+            head = newNode;
+        } else {
+            tail->next = newNode;
+        }
+        tail = newNode;
+    }
+
+    printf("Enter the position to create a cycle (-1 for no cycle): ");
+    scanf("%d", &pos);
+    createCycle(head, pos);
+
+    if (hasCycle(head)) {
+        printf("The linked list has a cycle.\n");
+    } else {
+        printf("The linked list does not have a cycle.\n");
+    }
+
+    return 0;
+}
