@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertAtLeft(struct Node** head, int newData, int targetData) {
+    struct Node* newNode = createNode(newData);
+    struct Node* current = *head;
+
+    if (current == NULL) {
+        printf("The list is empty, inserting %d as the first element.\n", newData);
+        *head = newNode;
+        return;
+    }
+
+    // Traverse the list to find the target node
+    while (current != NULL && current->data != targetData) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Target node %d not found.\n", targetData);
+        free(newNode);
+        return;
+    }
+
+    newNode->next = current;
+    newNode->prev = current->prev;
+
+    if (current->prev != NULL) {
+        current->prev->next = newNode;
+    } else {
+        *head = newNode;  
+    }
+    current->prev = newNode;
+}
+void deleteNode(struct Node** head, int value) {
+    struct Node* current = *head;
+
+    if (current == NULL) {
+        printf("The list is empty. Cannot delete node.\n");
+        return;
+    }
+
+    while (current != NULL && current->data != value) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Node with value %d not found.\n", value);
+        return;
+    }
+
+    if (current->prev == NULL) {
+        *head = current->next;
+        if (current->next != NULL) {
+            current->next->prev = NULL;
+        }
+    } else {
+        current->prev->next = current->next;
+        if (current->next != NULL) {
+            current->next->prev = current->prev;
+        }
+    }
+
+    free(current); 
+    printf("Node with value %d deleted.\n", value);
+}
+
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+
+    struct Node* current = head;
+    printf("List contents: ");
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+    int choice, value, target;
+
+    while (1) {
+        printf("\nDoubly Linked List Operations:\n");
+        printf("1. Insert a node at the left of a specific node\n");
+        printf("2. Delete a node based on value\n");
+        printf("3. Display the list\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value to insert: ");
+                scanf("%d", &value);
+                printf("Enter the target node's value to insert left of: ");
+                scanf("%d", &target);
+                insertAtLeft(&head, value, target);
+                break;
+
+            case 2:
+                printf("Enter the value to delete: ");
+                scanf("%d", &value);
+                deleteNode(&head, value);
+                break;
+
+            case 3:
+                displayList(head);
+                break;
+
+            case 4:
+                exit(0);
+                break;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+     }
+
+    return 0;
+}
+
